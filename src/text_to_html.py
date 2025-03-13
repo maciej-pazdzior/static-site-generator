@@ -1,4 +1,5 @@
 from htmlnode import LeafNode
+from textnode import TextType
 
 def text_node_to_html_node(text_node):
     text_type = text_node.text_type
