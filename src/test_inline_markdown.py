@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from src.split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link, extract_markdown_images, extract_markdown_links, text_to_textnodes
+from src.inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link, extract_markdown_images, extract_markdown_links, text_to_textnodes
 
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_node_split_code(self):
