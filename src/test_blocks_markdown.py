@@ -1,6 +1,7 @@
 import unittest
 
-from blocks_markdown import markdown_to_blocks
+from blocks_markdown import markdown_to_blocks, block_to_block_type
+from blocktype import BlockType
 
 class TestBlocksMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -23,7 +24,27 @@ class TestBlocksMarkdown(unittest.TestCase):
             ],
         )
 
-
+    def test_block_to_block_type(self):
+        blocks = [
+            "###### Heading 1",
+            "``` Some code ```",
+            "> First quote\n> Second quote",
+            "- This is a list\n- with items",
+            "1. First item\n2. Second item",
+            "Normal paragraph"
+        ]
+        block_types = list(map(lambda block: block_to_block_type(block), blocks))
+        self.assertEqual(
+            block_types,
+            [
+                BlockType.HEADING,
+                BlockType.CODE,
+                BlockType.QUOTE,
+                BlockType.UNORDERED_LIST,
+                BlockType.ORDERED_LIST,
+                BlockType.PARAGRAPH
+            ]
+        )
 
 
 if __name__ == "__main__":
