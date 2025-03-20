@@ -37,4 +37,5 @@ class ParentNode(HTMLNode):
             raise ValueError("There is no tag")
         if not self.children:
             raise ValueError("There is no children")
-        return f"<{self.tag}>{''.join(list(map(lambda child: child.to_html(), self.children)))}</{self.tag}>"
+        html = f"<{self.tag}>{''.join(list(map(lambda child: child.to_html(), self.children)))}</{self.tag}>"
+        return html
