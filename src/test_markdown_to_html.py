@@ -47,6 +47,19 @@ class TestMarkdownToHTML(unittest.TestCase):
             "<div><blockquote>This is a quote.</blockquote></div>",
         )
 
+    def test_unordered_list(self):
+        md = """
+        - Item 1
+        - Item 2
+        - Item 3
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div>",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
