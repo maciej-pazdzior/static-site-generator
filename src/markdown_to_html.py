@@ -18,16 +18,19 @@ def markdown_to_html_node(markdown):
             BlockType.UNORDERED_LIST: "ul",
             BlockType.ORDERED_LIST: "ol"
         }
-        if  block_type != BlockType.CODE:
-            block = block.replace("\n", " ")
-            parent_node = ParentNode(tags[block_type], text_to_children(block))
-            html_blocks.append(parent_node)
-        else:
+        if  block_type == BlockType.CODE:
             block = block[4:-3]
             text_node = TextNode(block, TextType.CODE)
             html_node = text_node_to_html_node(text_node)
             pre_parent = ParentNode("pre", [html_node])
             html_blocks.append(pre_parent)
+
+        else:
+            if block_type == BlockType.QUOTE:
+                block = block[2:]
+            block = block.replace("\n", " ")
+            parent_node = ParentNode(tags[block_type], text_to_children(block))
+            html_blocks.append(parent_node)
     div_parent = ParentNode("div", html_blocks)
     return div_parent
 
