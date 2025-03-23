@@ -14,7 +14,7 @@ def markdown_to_html_node(markdown):
         block_type = block_to_block_type(block)
         tags = {
             BlockType.PARAGRAPH: "p",
-            BlockType.HEADING: 'h1',
+            BlockType.HEADING: 'h',
             BlockType.CODE : "code",
             BlockType.QUOTE: "blockquote",
             BlockType.UNORDERED_LIST: "ul",
@@ -31,7 +31,14 @@ def markdown_to_html_node(markdown):
             if block_type == BlockType.QUOTE:
                 block = block[2:]
             block = block.replace("\n", " ")
-            parent_node = ParentNode(tags[block_type], text_to_children(block, block_type))
+            if block_type == BlockType.HEADING:
+                heading_hashes = re.match("^#{1,6}", block).group(0)
+                hash_count = len(heading_hashes)
+                tag = f"h{hash_count}"
+                block = block[hash_count+1:]
+                parent_node = ParentNode(tag, text_to_children(block, block_type))
+            else:
+                parent_node = ParentNode(tags[block_type], text_to_children(block, block_type))
             html_blocks.append(parent_node)
     div_parent = ParentNode("div", html_blocks)
     return div_parent
