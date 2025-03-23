@@ -1,3 +1,5 @@
+import re
+
 from markdown_blocks import markdown_to_blocks, block_to_block_type
 from htmlnode import HTMLNode, ParentNode, LeafNode
 from inline_markdown import text_to_textnodes
@@ -37,6 +39,13 @@ def markdown_to_html_node(markdown):
 def text_to_children(text, block_type):
     if block_type == BlockType.UNORDERED_LIST:
         list_items = text.split("- ")
+        html_nodes = []
+        for item in list_items:
+            if item:
+                item = item.strip()
+                html_nodes.append(LeafNode("li", item))
+    elif block_type == BlockType.ORDERED_LIST:
+        list_items = re.split(r"\d+\.", text)
         html_nodes = []
         for item in list_items:
             if item:

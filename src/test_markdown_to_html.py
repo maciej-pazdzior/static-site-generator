@@ -60,6 +60,19 @@ class TestMarkdownToHTML(unittest.TestCase):
             "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div>",
         )
 
+    def test_ordered_list(self):
+        md = """
+        1. Item 1
+        2. Item 2
+        3. Item 3
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></div>",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
