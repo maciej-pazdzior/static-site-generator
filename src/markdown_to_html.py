@@ -30,6 +30,7 @@ def markdown_to_html_node(markdown):
         else:
             if block_type == BlockType.QUOTE:
                 block = block[2:]
+                block = block.replace(">", " ")
             block = block.replace("\n", " ")
             if block_type == BlockType.HEADING:
                 heading_hashes = re.match("^#{1,6}", block).group(0)
@@ -43,21 +44,21 @@ def markdown_to_html_node(markdown):
     div_parent = ParentNode("div", html_blocks)
     return div_parent
 
-def text_to_children(text, block_type):
+def text_to_children(text, block_type=None):
     if block_type == BlockType.UNORDERED_LIST:
         list_items = text.split("- ")
         html_nodes = []
         for item in list_items:
             if item:
                 item = item.strip()
-                html_nodes.append(LeafNode("li", item))
+                html_nodes.append(ParentNode("li", text_to_children(item)))
     elif block_type == BlockType.ORDERED_LIST:
         list_items = re.split(r"\d+\.", text)
         html_nodes = []
         for item in list_items:
             if item:
                 item = item.strip()
-                html_nodes.append(LeafNode("li", item))
+                html_nodes.append(ParentNode("li", text_to_children(item)))
     else:
         text_nodes = text_to_textnodes(text)
         html_nodes = list(map(lambda node: text_node_to_html_node(node), text_nodes))

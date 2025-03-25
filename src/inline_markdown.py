@@ -26,12 +26,12 @@ def split_nodes_image(old_nodes):
         images = extract_markdown_images(original_text)
         nodes_list = []
         for image in images:
-            link_alt = image[0]
-            link_url = image[1]
-            sections = original_text.split(f"![{link_alt}]({link_url})", 1)
+            image_alt = image[0]
+            image_url = image[1]
+            sections = original_text.split(f"![{image_alt}]({image_url})", 1)
             if sections[0]:
                 nodes_list.append(TextNode(sections[0], node.text_type, node.url))
-            nodes_list.append(TextNode(link_alt, TextType.IMAGE, link_url))
+            nodes_list.append(TextNode(None, TextType.IMAGE, image_url, image_alt))
             original_text = sections[1]
         if original_text:
             nodes_list.append(TextNode(original_text, node.text_type, node.url))
@@ -43,19 +43,22 @@ def split_nodes_link(old_nodes):
     new_nodes = []
     for node in old_nodes:
         original_text = node.text
-        links = extract_markdown_links(original_text)
-        nodes_list = []
-        for link in links:
-            link_alt = link[0]
-            link_url = link[1]
-            sections = original_text.split(f"[{link_alt}]({link_url})", 1)
-            if sections[0]:
-                nodes_list.append(TextNode(sections[0], node.text_type, node.url))
-            nodes_list.append(TextNode(link_alt, TextType.LINK, link_url))
-            original_text = sections[1]
-        if original_text:
-            nodes_list.append(TextNode(original_text, node.text_type, node.url))
-        new_nodes.extend(nodes_list)
+        if original_text == None:
+            new_nodes.append(node)
+        else:
+            links = extract_markdown_links(original_text)
+            nodes_list = []
+            for link in links:
+                link_alt = link[0]
+                link_url = link[1]
+                sections = original_text.split(f"[{link_alt}]({link_url})", 1)
+                if sections[0]:
+                    nodes_list.append(TextNode(sections[0], node.text_type, node.url))
+                nodes_list.append(TextNode(link_alt, TextType.LINK, link_url))
+                original_text = sections[1]
+            if original_text:
+                nodes_list.append(TextNode(original_text, node.text_type, node.url))
+            new_nodes.extend(nodes_list)
     return new_nodes
 
 
