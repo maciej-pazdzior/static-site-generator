@@ -13,7 +13,7 @@ def copy_static_to_public():
             else:
                 copy_files_from_dir(object_path, os.path.join(dst_path, object))
 
-    dst_path = "public"
+    dst_path = "docs"
     shutil.rmtree(dst_path, True)
     src_path = "static"
     if os.path.exists(src_path):

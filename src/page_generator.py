@@ -8,7 +8,7 @@ def extract_title(markdown):
     title = re.search(r"<h1>(.+?)</h1>", html).group(1)
     return title
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path) as f:
         md_content = f.read()
@@ -18,18 +18,20 @@ def generate_page(from_path, template_path, dest_path):
     page_title = extract_title(md_content)
     template_content = template_content.replace("{{ Title }}", page_title)
     template_content = template_content.replace("{{ Content }}", html_string)
+    template_content = template_content.replace("href=\"/", f"href=\"{basepath}")
+    template_content = template_content.replace("src=\"/", f"src=\"{basepath}")
     with open(dest_path, "x") as f:
         f.write(template_content)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     objects = os.listdir(dir_path_content)
     for object in objects:
         object_path = os.path.join(dir_path_content, object)
         if os.path.isfile(object_path):
             new_file_path = os.path.join(dest_dir_path, object)
             new_file_path = new_file_path.replace("md", "html")
-            generate_page(object_path, template_path, new_file_path)
+            generate_page(object_path, template_path, new_file_path, basepath)
         else:
             new_dir_path = os.path.join(dest_dir_path, object)
             os.mkdir(new_dir_path)
-            generate_pages_recursive(object_path, template_path, new_dir_path)
+            generate_pages_recursive(object_path, template_path, new_dir_path, basepath)
